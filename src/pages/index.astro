@@ -1,0 +1,212 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ContactForm from '../components/ContactForm.astro';
+
+const rawProjects = await getCollection('projects');
+rawProjects.sort((a, b) => (b.data.date > a.data.date ? 1 : -1));
+
+const projects = await Promise.all(
+  rawProjects.map(async (project) => {
+    const { Content } = await render(project);
+    return {
+      ...project,
+      Content,
+    };
+  })
+);
+---
+
+<Layout title="Creative Portfolio | Selected Works">
+  <!-- Hero -->
+  <section class="py-20 md:py-28 max-w-2xl">
+    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-6">
+      Designing spaces, visuals, and tactile experiences.
+    </h1>
+    <p class="text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed mb-8">
+      Independent creative specializing in large-format visual art, brand installations, and collaborative projects.
+    </p>
+    <a href="#contact" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-neutral-900 text-white dark:bg-white dark:text-black font-medium hover:opacity-90 transition-opacity">
+      Get in touch
+    </a>
+  </section>
+
+  <!-- Projects Section (All 5 in 1 Screen-Fit Strip) -->
+  <section id="work" class="py-12 border-t border-neutral-200 dark:border-neutral-900">
+    <div class="flex justify-between items-baseline mb-6">
+      <div>
+        <h2 class="text-2xl font-bold tracking-tight">Featured Work</h2>
+        <p class="text-xs text-neutral-500 font-mono mt-1">01 — 0{projects.length} Works (Hover to expand)</p>
+      </div>
+    </div>
+
+    <!-- 5-Card Expanding Strip -->
+    <div class="flex flex-col md:flex-row gap-3 w-full" id="projects-strip">
+      {projects.map((project, index) => (
+        <ProjectCard
+          id={project.id}
+          index={index}
+          title={project.data.title}
+          category={project.data.category}
+          description={project.data.description}
+          tags={project.data.tags}
+          coverImage={project.data.coverImage}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-16 border-t border-neutral-200 dark:border-neutral-900">
+    <div class="max-w-xl">
+      <h2 class="text-2xl font-bold tracking-tight mb-4">About</h2>
+      <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        Focused on high-impact visual work, studio painting, and large-scale public art. Driven by tactile craft, collaboration, and spatial storytelling.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Form Section -->
+  <section id="contact" class="py-16 border-t border-neutral-200 dark:border-neutral-900">
+    <div class="max-w-xl mb-8">
+      <h2 class="text-2xl font-bold tracking-tight mb-2">Let's collaborate</h2>
+      <p class="text-neutral-600 dark:text-neutral-400 text-sm">
+        Have an upcoming project, mural, or custom commission in mind? Fill out the brief below.
+      </p>
+    </div>
+    <ContactForm />
+  </section>
+
+  <!-- Modals -->
+  {projects.map((project, index) => {
+    const nextProject = projects[(index + 1) % projects.length];
+
+    return (
+      <dialog
+        id={`modal-${project.id}`}
+        class="project-modal backdrop:bg-neutral-950/75 backdrop:backdrop-blur-sm bg-transparent p-4 md:p-6 w-full max-w-3xl m-auto rounded-3xl outline-none"
+      >
+        <div class="modal-content relative bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-6 md:p-10 max-h-[88vh] overflow-y-auto shadow-2xl">
+          
+          <div class="flex justify-between items-center mb-8">
+            <button
+              type="button"
+              class="modal-close-btn flex items-center gap-2 text-xs font-mono text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer"
+              aria-label="Back to all work"
+            >
+              <span>←</span> Back to all work
+            </button>
+
+            <button
+              type="button"
+              class="modal-close-btn p-1.5 rounded-full text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+              aria-label="Close modal"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="mb-6">
+            <span class="text-xs uppercase tracking-wider text-neutral-500 dark:text-neutral-400 font-medium">{project.data.category}</span>
+            <h2 class="text-2xl md:text-4xl font-bold tracking-tight mt-2 mb-3">{project.data.title}</h2>
+            <p class="text-base text-neutral-600 dark:text-neutral-400">{project.data.description}</p>
+          </div>
+
+          {project.data.coverImage && (
+            <div class="rounded-xl overflow-hidden mb-8 border border-neutral-200 dark:border-neutral-800">
+              <img src={project.data.coverImage} alt={project.data.title} class="w-full h-auto object-cover max-h-[440px]" />
+            </div>
+          )}
+
+          <div class="prose prose-neutral dark:prose-invert max-w-none text-neutral-700 dark:text-neutral-300 space-y-4 leading-relaxed">
+            <project.Content />
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-wrap gap-2">
+            {project.data.tags.map((tag) => (
+              <span class="text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 px-3 py-1 rounded-md font-mono">{tag}</span>
+            ))}
+          </div>
+
+          {projects.length > 1 && (
+            <div class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+              <span class="text-xs font-mono uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-3 block">Next Project</span>
+              <button
+                type="button"
+                data-switch-to={`modal-${nextProject.id}`}
+                class="modal-switch-btn group w-full text-left p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 hover:border-neutral-400 dark:hover:border-neutral-600 transition-all flex items-center justify-between cursor-pointer"
+              >
+                <div>
+                  <span class="text-xs text-neutral-500 dark:text-neutral-400 block mb-1">{nextProject.data.category}</span>
+                  <h4 class="text-lg font-semibold group-hover:text-black dark:group-hover:text-white transition-colors">{nextProject.data.title}</h4>
+                </div>
+                <span class="text-neutral-400 group-hover:text-black dark:group-hover:text-white group-hover:translate-x-1 transition-all text-xl font-mono">→</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </dialog>
+    );
+  })}
+</Layout>
+
+<script>
+  // Modal open trigger
+  document.querySelectorAll<HTMLButtonElement>('.project-card-trigger').forEach((button) => {
+    button.addEventListener('click', () => {
+      const modalId = button.dataset.modalTarget;
+      if (modalId) {
+        const dialog = document.getElementById(modalId) as HTMLDialogElement | null;
+        dialog?.showModal();
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  // Modal close & switch handlers
+  document.querySelectorAll<HTMLDialogElement>('.project-modal').forEach((dialog) => {
+    dialog.querySelectorAll('.modal-close-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        dialog.close();
+        document.body.style.overflow = '';
+      });
+    });
+
+    dialog.querySelectorAll<HTMLButtonElement>('.modal-switch-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.switchTo;
+        if (targetId) {
+          dialog.close();
+          const nextDialog = document.getElementById(targetId) as HTMLDialogElement | null;
+          nextDialog?.showModal();
+          const scrollContainer = nextDialog?.querySelector<HTMLElement>('.modal-content');
+          if (scrollContainer) scrollContainer.scrollTop = 0;
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+
+    dialog.addEventListener('click', (event) => {
+      const rect = dialog.querySelector('.modal-content')?.getBoundingClientRect();
+      if (rect) {
+        const isClickInside = (
+          event.clientX >= rect.left &&
+          event.clientX <= rect.right &&
+          event.clientY >= rect.top &&
+          event.clientY <= rect.bottom
+        );
+        if (!isClickInside) {
+          dialog.close();
+          document.body.style.overflow = '';
+        }
+      }
+    });
+
+    dialog.addEventListener('close', () => {
+      document.body.style.overflow = '';
+    });
+  });
+</script>

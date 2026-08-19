@@ -1,0 +1,70 @@
+---
+interface Props {
+  id: string;
+  index: number;
+  title: string;
+  category: string;
+  description: string;
+  tags: string[];
+  coverImage?: string;
+}
+
+const { id, index, title, category, description, tags, coverImage } = Astro.props;
+const formattedIndex = String(index + 1).padStart(2, '0');
+---
+
+<button
+  type="button"
+  data-modal-target={`modal-${id}`}
+  data-category={category.toLowerCase()}
+  class="project-card-trigger group relative overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-900 text-left transition-all duration-500 ease-out cursor-pointer flex-1 hover:flex-[2.5] h-36 md:h-[420px] min-w-0 shadow-sm"
+>
+  <!-- Background Image - Bright & Crisp -->
+  {coverImage ? (
+    <img
+      src={coverImage}
+      alt={title}
+      class="absolute inset-0 w-full h-full object-cover opacity-75 dark:opacity-70 group-hover:opacity-95 group-hover:scale-105 transition-all duration-500 ease-out"
+    />
+  ) : (
+    <div class="absolute inset-0 bg-neutral-800" />
+  )}
+
+  <!-- Accessible, Feathered Gradient Vignette -->
+  <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 transition-opacity duration-300 group-hover:from-black/90 group-hover:via-black/40" />
+
+  <!-- Overlay Content -->
+  <div class="relative h-full p-4 md:p-6 flex flex-col justify-between z-10 text-white">
+    <!-- Top Bar -->
+    <div class="flex justify-between items-start">
+      <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-white border border-white/10 shadow-xs">
+        {formattedIndex}
+      </span>
+      <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-md text-white border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-xs">
+        Explore ↗
+      </span>
+    </div>
+
+    <!-- Bottom Info -->
+    <div class="drop-shadow-md">
+      <span class="text-[11px] uppercase tracking-wider font-semibold text-neutral-200 block truncate mb-1">
+        {category}
+      </span>
+      <h3 class="text-base md:text-xl font-bold tracking-tight text-white leading-snug line-clamp-1 group-hover:line-clamp-2 transition-all">
+        {title}
+      </h3>
+      <p class="text-xs text-neutral-200 line-clamp-2 hidden group-hover:block transition-all duration-300 pt-2 leading-relaxed max-w-sm">
+        {description}
+      </p>
+
+      <!-- Expandable Tags on Hover -->
+      <div class="hidden group-hover:flex flex-wrap gap-1.5 pt-3 transition-all duration-300">
+        {tags.slice(0, 2).map((tag) => (
+          <span class="text-[10px] font-mono bg-white/20 backdrop-blur-sm text-white px-2 py-0.5 rounded-md border border-white/10">
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</button>
