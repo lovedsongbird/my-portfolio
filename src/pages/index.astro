@@ -230,8 +230,9 @@ nav.primary a:hover{ color:var(--ink); } nav.primary a:hover::after{ transform:s
 }
 
 .hero h1 { 
-  font-family: var(--font-headline); font-size: clamp(2.8rem, 6.5vw, 5rem); 
+  font-family: var(--font-headline); font-size: clamp(2rem, 8vw, 5rem); 
   text-transform: uppercase; line-height: 0.9; max-width: 920px; margin: 0;
+  overflow-wrap: break-word;
 }
 
 .hero h1 .smaller-text {
@@ -277,7 +278,7 @@ nav.primary a:hover{ color:var(--ink); } nav.primary a:hover::after{ transform:s
 .section{ padding: 60px 0; scroll-margin-top:90px; } 
 .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:40px; }
 
-.work-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap: 50px 30px; }
+.work-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 50px 30px; }
 
 .work-card{ background: transparent; position: relative; display: flex; flex-direction: column; padding-left: 20px; transition: transform 0.3s ease; }
 .work-card::before{ content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 0; background: var(--accent); transition: height 0.3s cubic-bezier(0.2, 1, 0.3, 1); }
@@ -758,6 +759,17 @@ footer.site .mono{ color:var(--ink-soft); font-weight: 700; }
 /* Visual cues that images are clickable */
 :global(.cs-image), :global(.cs-laptop) { transition: opacity 0.2s ease; }
 :global(.cs-image:hover), :global(.cs-laptop:hover) { opacity: 0.85; }
+
+/* =========================================
+   MOBILE SAFETY NET (Prevents Margin Collapse)
+   ========================================= */
+html, body { overflow-x: hidden !important; width: 100%; }
+
+@media (max-width: 760px) {
+  .wrap, .nav-row { padding: 0 24px !important; }
+  /* Pulls the nav links slightly closer together so they don't force a horizontal scroll */
+  nav.primary { gap: 16px; } 
+}
 
 </style>
 </head>
