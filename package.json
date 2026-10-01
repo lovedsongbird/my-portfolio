@@ -15,8 +15,5 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.4",
     "tailwindcss": "^4.3.3"
-  },
-  "devDependencies": {
-    "@bruits/satteri-darwin-arm64": "^0.10.3"
   }
 }
