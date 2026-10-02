@@ -259,7 +259,15 @@ nav.primary a:hover{ color:var(--ink); } nav.primary a:hover::after{ transform:s
 /* =========================================
    CENTERED BOUNCING CHEVRON
    ========================================= */
-.scroll-indicator-wrapper { margin-top: 50px; width: 100%; display: flex; justify-content: center; align-items: center; }
+.scroll-indicator-wrapper { 
+  margin-top: 40px; 
+  margin-bottom: 40px; /* Adds a protective buffer below the bouncing icon */
+  width: 100%; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+
 .scroll-chevron {
   width: 32px; height: 32px; 
   fill: none; stroke: var(--ink); stroke-width: 3; 
@@ -877,7 +885,7 @@ html, body { overflow-x: hidden !important; width: 100%; }
 
     <button class="work-card text-left" data-project="5">
       <div class="thumb">
-        <img src="partitions_workgrid.png" alt="Sprint">
+        <img src="partitions_workgrid.png" alt="Partitions Sprint">
       </div>
       <div class="body">
         <div class="meta"><span>05 / Strategy</span></div>
