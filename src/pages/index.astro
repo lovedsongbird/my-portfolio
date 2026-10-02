@@ -331,6 +331,37 @@ nav.primary a:hover{ color:var(--ink); } nav.primary a:hover::after{ transform:s
   background-color: rgba(255, 175, 185, 0.9);
   clip-path: polygon(1% 0%, 100% 2%, 98% 15%, 100% 30%, 97% 45%, 100% 60%, 98% 75%, 100% 90%, 99% 100%, 0% 98%, 2% 85%, 0% 70%, 3% 55%, 0% 40%, 2% 25%, 0% 10%);
 }
+
+.static-star {
+  position: absolute; width: 45px; height: 45px; z-index: -1;
+  fill: var(--accent); /* You can change this inline to var(--ink) or var(--accent-2) */
+}
+
+/* 2. Cyan Tape Modifier */
+.tape-motif.cyan {
+  background-color: rgba(0, 229, 255, 0.85); /* Uses your --accent-2 */
+  transform: translateX(-50%) rotate(3deg); /* Tilts the opposite way of the pink tape */
+}
+
+/* 3. Vertical Serial / Barcode */
+.serial-motif {
+  font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700;
+  color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.2em;
+  transform: rotate(-90deg); transform-origin: left top;
+  position: absolute; left: -20px; top: 120px; opacity: 0.7; pointer-events: none;
+}
+.serial-motif::after {
+  content: "|| ||| | || |||| | |"; /* Faux monospace barcode */
+  display: block; letter-spacing: 2px; margin-top: 6px; font-weight: 400; font-size: 0.5rem;
+}
+
+/* 4. Highlighter Marker */
+.highlight-marker {
+  background: linear-gradient(104deg, transparent 0%, rgba(255, 51, 85, 0.15) 2%, rgba(255, 51, 85, 0.3) 98%, transparent 100%);
+  padding: 2px 6px; border-radius: 2px; display: inline-block;
+  transform: rotate(-1deg);
+}
+
 .stamp-motif {
   position: absolute; top: -45px; right: -25px; width: 120px; height: 120px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink);
   display: flex; align-items: center; justify-content: center; text-align: center;
@@ -903,8 +934,8 @@ html, body { overflow-x: hidden !important; width: 100%; }
   </div>
   <div class="about-grid">
     <div class="about-body">
-      <p class="lead">I BELIEVE THAT STRUCTURING A DIGITAL LAYOUT, PAINTING A MASSIVE EXTERIOR WALL, AND MAPPING AN ACOUSTIC ARRANGEMENT ALL REQUIRE THE EXACT SAME SKILLSET: BALANCING LOGIC WITH EMOTION.</p>
-      <p>I am a multidisciplinary designer and visual artist. During the day, I focus on solving complex user experience challenges—translating heavy data models, legacy systems, and enterprise requirements into clean, intuitive digital products. When I close my laptop, I move to physical space, whether I'm building my own canvases for large-scale paintings or mapping out community murals.</p>
+      <p class="lead">DESIGNER BY DAY, THROWING DOWN SLABS OF CLAY, FIDDLING WITH MY GUITAR, HALF-MARATHON-IN-TRAINING, BIKING, PICKLEBALL NOVICE BY NIGHT. </p>
+      <p>Though I do relish in the design process and love solving complex problems with elegant, disruptive solutions, there's more to me than meets the eye. I love being in nature, challenging myself to push past my limits, and squeeze out every ounce of joy in life.</p>
       <div class="skill-list"><span>Service Design</span><span>Journey Maps</span><span>Facilitation</span><span>Research</span><span>Info Architecture</span></div>
     </div>
     
@@ -1094,7 +1125,11 @@ html, body { overflow-x: hidden !important; width: 100%; }
         </div>
         
         <!-- Right Column: Image -->
+        
         <div class="cs-timeline-right">
+           <svg class="static-star" style="top: -20px; right: -20px;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 0 L55 40 L95 25 L65 50 L95 75 L55 60 L50 100 L45 60 L5 75 L35 50 L5 25 L45 40 Z" />
+          </svg>
           <img src="/Return_crafty.png" alt="Team Award" style="width: 100%; border: 1px solid var(--line-strong); border-radius: 6px;">
         </div>
         
