@@ -800,25 +800,16 @@ footer.site .mono{ color:var(--ink-soft); font-weight: 700; }
 :global(.cs-image:hover), :global(.cs-laptop:hover) { opacity: 0.85; }
 
 /* =========================================
-   MAGNETIC SCROLL SNAPPING
+   MAGNETIC SCROLL SNAPPING (Softened)
    ========================================= */
 html {
-  /* Uses 'proximity' on mobile so users don't get trapped if a section is taller than their phone screen! */
-  scroll-snap-type: y proximity; 
-}
-
-@media (min-width: 860px) {
-  html {
-    /* On larger desktop screens where we have plenty of room, make the snap strict */
-    scroll-snap-type: y mandatory;
-  }
+  /* Proximity allows free scrolling, but gently pulls if they pause near a section edge */
+  scroll-snap-type: y proximity !important; 
 }
 
 .hero, .section {
-  /* Tells the browser to magnetically pull the top of the section to the top of the screen */
   scroll-snap-align: start;
-  /* Forces the scroll wheel to stop at each section, preventing them from flying past */
-  scroll-snap-stop: always; 
+  /* 'scroll-snap-stop: always' has been removed so it doesn't fight fast scroll wheels */
 }
 
 
@@ -892,32 +883,36 @@ html, body { overflow-x: hidden !important; width: 100%; }
     <h2>Selected Work</h2>
   </div>
 
-  <div class="work-grid" id="work-grid">
-    <button class="work-card text-left" data-project="1">
+ <div class="work-grid" id="work-grid">
+    
+    <!-- 1st: 1CXP (Originally 4) -->
+    <button class="work-card text-left" data-project="4">
       <div class="thumb">
-        <img src="return_workgrid.png" alt="Return mail cover photo">
+        <img src="/1cxp_coverphoto.png" alt="CRM">
       </div>
       <div class="body">
-        <div class="meta"><span>01 / Service Design</span></div>
-        <h3>Returned Mail</h3>
-        <p>Reframed a reactive support failure into a proactive save — ~$2.8M recovered annually.</p>
+        <div class="meta"><span>01 / Enterprise UX</span></div>
+        <h3>1CXP / Private Client</h3>
+        <p>Shipped two 0→1 enterprise flows in an unfamiliar design system under extreme pressure.</p>
       </div>
     </button>
 
-    <button class="work-card text-left" data-project="2">
+    <!-- 2nd: Partitions Sprint (Originally 5) -->
+    <button class="work-card text-left" data-project="5">
       <div class="thumb">
-        <img src="tax_workgrid.png" alt="Workshop">
+        <img src="/partitions_workgrid.png" alt="Partitions Sprint">
       </div>
       <div class="body">
-        <div class="meta"><span>02 / Facilitation</span></div>
-        <h3>Tax Modernization</h3>
-        <p>Built the master artifact that made an 85-person, multi-LOB alignment workshop possible.</p>
+        <div class="meta"><span>02 / Strategy</span></div>
+        <h3>Partitions Sprint</h3>
+        <p>Led the design sprint behind a ~$50B deposit-share opportunity — from zero to buy-in.</p>
       </div>
     </button>
-    
+
+    <!-- 3rd: Interest Rates (Originally 3) -->
     <button class="work-card text-left" data-project="3">
       <div class="thumb">
-        <img src="interest_workgrid.png" alt="Config">
+        <img src="/interest_workgrid.png" alt="Config">
       </div>
       <div class="body">
         <div class="meta"><span>03 / System Config</span></div>
@@ -926,27 +921,30 @@ html, body { overflow-x: hidden !important; width: 100%; }
       </div>
     </button>
 
-    <button class="work-card text-left" data-project="4">
+    <!-- 4th: Returned Mail (Originally 1) -->
+    <button class="work-card text-left" data-project="1">
       <div class="thumb">
-        <img src="1cxp_coverphoto.png" alt="CRM">
+        <img src="/return_workgrid.png" alt="Return mail cover photo">
       </div>
       <div class="body">
-        <div class="meta"><span>04 / Enterprise UX</span></div>
-        <h3>1CXP / Private Client</h3>
-        <p>Shipped two 0→1 enterprise flows in an unfamiliar design system under extreme pressure.</p>
+        <div class="meta"><span>04 / Service Design</span></div>
+        <h3>Returned Mail</h3>
+        <p>Reframed a reactive support failure into a proactive save — ~$2.8M recovered annually.</p>
       </div>
     </button>
 
-    <button class="work-card text-left" data-project="5">
+    <!-- 5th: Tax Modernization (Originally 2) -->
+    <button class="work-card text-left" data-project="2">
       <div class="thumb">
-        <img src="partitions_workgrid.png" alt="Partitions Sprint">
+        <img src="/tax_workgrid.png" alt="Workshop">
       </div>
       <div class="body">
-        <div class="meta"><span>05 / Strategy</span></div>
-        <h3>Partitions Sprint</h3>
-        <p>Led the design sprint behind a ~$50B deposit-share opportunity — from zero to buy-in.</p>
+        <div class="meta"><span>05 / Facilitation</span></div>
+        <h3>Tax Modernization</h3>
+        <p>Built the master artifact that made an 85-person, multi-LOB alignment workshop possible.</p>
       </div>
     </button>
+
   </div>
 </section>
 
@@ -1802,14 +1800,18 @@ function openModal(id, isSlide = false) {
     const clone = tpl.content.cloneNode(true);
     modalBody.appendChild(clone);
     
-    // Calculate Next ID & Grab the short Meta span!
-    const nextId = parseInt(id) === totalProjects ? 1 : parseInt(id) + 1;
+   // Custom Navigation Sequence Roadmap
+    const sequence = ['4', '5', '3', '1', '2'];
+    const currentIndex = sequence.indexOf(id.toString());
+    
+    // Calculate Next ID & Grab the short Meta span
+    const nextId = sequence[(currentIndex + 1) % sequence.length];
     const nextCard = document.querySelector(`.work-card[data-project="${nextId}"]`);
     const nextTitle = nextCard ? nextCard.querySelector('h3').innerText : '';
     const nextSubtitle = nextCard ? nextCard.querySelector('.meta span').innerText : '';
 
-    // Calculate Prev ID & Grab the short Meta span!
-    const prevId = parseInt(id) === 1 ? totalProjects : parseInt(id) - 1;
+    // Calculate Prev ID & Grab the short Meta span
+    const prevId = sequence[(currentIndex - 1 + sequence.length) % sequence.length];
     const prevCard = document.querySelector(`.work-card[data-project="${prevId}"]`);
     const prevTitle = prevCard ? prevCard.querySelector('h3').innerText : '';
     const prevSubtitle = prevCard ? prevCard.querySelector('.meta span').innerText : '';
