@@ -217,6 +217,9 @@ nav.primary a:hover{ color:var(--ink); } nav.primary a:hover::after{ transform:s
 .glitch:hover::after { color: var(--accent-2); transform: translate(-4px,2px); }
 @keyframes glitchShake{ 0%{transform:translate(0,0);} 50%{transform:translate(-1px,1px);} 100%{transform:translate(1px,-1px);} }
 
+/* NEW: Swaps the red shadow to ink for words that are already red */
+.accent-word.glitch:hover::before { color: var(--ink); }
+
 /* =========================================
    HERO WITH EDITORIAL PORTRAIT GRID
    ========================================= */
