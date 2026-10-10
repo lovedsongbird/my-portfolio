@@ -800,6 +800,29 @@ footer.site .mono{ color:var(--ink-soft); font-weight: 700; }
 :global(.cs-image:hover), :global(.cs-laptop:hover) { opacity: 0.85; }
 
 /* =========================================
+   MAGNETIC SCROLL SNAPPING
+   ========================================= */
+html {
+  /* Uses 'proximity' on mobile so users don't get trapped if a section is taller than their phone screen! */
+  scroll-snap-type: y proximity; 
+}
+
+@media (min-width: 860px) {
+  html {
+    /* On larger desktop screens where we have plenty of room, make the snap strict */
+    scroll-snap-type: y mandatory;
+  }
+}
+
+.hero, .section {
+  /* Tells the browser to magnetically pull the top of the section to the top of the screen */
+  scroll-snap-align: start;
+  /* Forces the scroll wheel to stop at each section, preventing them from flying past */
+  scroll-snap-stop: always; 
+}
+
+
+/* =========================================
    MOBILE SAFETY NET (Prevents Margin Collapse)
    ========================================= */
 html, body { overflow-x: hidden !important; width: 100%; }
